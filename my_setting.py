@@ -1,0 +1,6 @@
+SECRET_KEY = 'django-insecure-(cq$$2c0=g+riw%#zl+-b7-(v1fu3y_za829#8s7v^zz+=slb2'
+DBNAME = 'data01'
+DBUSER = 'user01'
+DBPW = 'qwer1234'
+DBHOST = '200.200.200.143'
+DBPORT = '3306'
