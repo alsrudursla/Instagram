@@ -1,0 +1,107 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>Chat Room</title>
+
+    <link rel="stylesheet" href={% static 'css/reset.css' %}>
+    <link rel="stylesheet" href={% static 'css/common.css' %}>
+    <link rel="stylesheet" href={% static 'css/style.css' %}>
+
+
+</head>
+<body>
+
+    <header id="header">
+        <section class="inner">
+
+            <h1 class="logo">
+                <a href="/">
+                    <div class="sprite_insta_icon"></div>
+                    <div class="sprite_write_logo"></div>
+                </a>
+            </h1>
+
+            <div class="right_icons">
+                <a href="/chatroom/"><img src={% static 'imgs/message.png' %} style="width:25px; height:25px;"/></a>
+                <a href="/new_post/"><div class="sprite_camera_icon"></div></a>
+                <a href="/login/"><div class="sprite_compass_icon"></div></a>
+                <a href="/profile/"><div class="sprite_user_icon_outline"></div></a>
+            </div>
+        </section>
+
+    </header>
+
+<div id="main_container">
+<div class="form_container">
+
+    <textarea id="chat-log" cols="100" rows="20"></textarea><br />
+    <input id="chat-message-input" type="text" size="100" style="vertical-align:middle">
+    <input id="chat-message-submit" type="button" style="vertical-align:middle" value="Send"><br />
+
+    <script type="text/javascript">
+        let roomName = "{{ room_id | escapejs }}";
+        let to = "{{ to | escapejs }}";
+
+        let chatSocket = new WebSocket(
+            `ws://${window.location.host}/ws/chatroom/${roomName}/`
+        );
+
+        chatSocket.onopen = (e) => {
+            chatSocket.send(JSON.stringify({'command' : 'return_messages'}))
+        };
+
+        chatSocket.onmessage = (e) => {
+            let data = JSON.parse(e.data);
+
+            if(data['command'] == 'return_messages') {
+                let messages = data['messages'];
+
+                for (const i in messages) {
+                    document.querySelector("#chat-log").value += (messages[i]['from_user'] + ' : ' + messages[i]['message'] + '\n');
+                }
+            } else {
+                let message = data['message'];
+                let from_user = data['from_user'];
+                document.querySelector("#chat-log").value += (from_user+' : ' + message + '\n');
+            }
+
+
+
+        };
+
+        chatSocket.onclose = (e) => {
+            console.error('Chat socket closed unexpectedly');
+        };
+
+        document.querySelector("#chat-message-input").focus();
+        document.querySelector("#chat-message-input").addEventListener("keyup",(e) => {
+            if (e.keyCode === 13) {
+                document.querySelector("#chat-message-submit").click();
+            }
+        });
+
+        document.querySelector("#chat-message-submit").addEventListener("click", (e) => {
+            let messageInputDom = document.querySelector("#chat-message-input");
+            let message = messageInputDom.value;
+            chatSocket.send(JSON.stringify({
+                'command': 'new_messages',
+                'message' : message,
+                'to_user' : to,
+                'from_user' : {{ request.session.user_uid }},
+                'room_id' : roomName
+            }));
+
+            messageInputDom.value = '';
+        });
+    </script>
+
+</div>
+</div>
+
+</body>
+</html>

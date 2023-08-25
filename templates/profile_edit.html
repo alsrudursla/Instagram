@@ -1,0 +1,93 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+
+    <title>instagram</title>
+    <link rel="stylesheet" href={% static 'css/reset.css' %}>
+    <link rel="stylesheet" href={% static 'css/common.css' %}>
+    <link rel="stylesheet" href={% static 'css/style.css' %}>
+    <link rel="stylesheet" href={% static 'css/login.css' %}>
+    <link rel="shortcut icon" href={% static 'imgs/instagram.png' %}>
+
+</head>
+<body>
+
+
+<section id="container">
+
+
+
+    <header id="header">
+        <section class="h_inner">
+
+            <h1 class="logo">
+                <a href="/">
+                    <div class="sprite_insta_icon"></div>
+                    <div>
+                        <div class="sprite_write_logo"></div>
+                    </div>
+                </a>
+            </h1>
+
+
+            <div class="right_icons">
+                <a href="/chatroom/"><img src={% static 'imgs/message.png' %} style="width:25px; height:25px;"/></a>
+                <a href="/new_post/"><div class="sprite_camera_icon"></div></a>
+                <a href="/login/"><div class="sprite_compass_icon"></div></a>
+                <a href="/profile/"><div class="sprite_user_icon_outline"></div></a>
+            </div>
+        </section>
+    </header>
+
+
+
+    <div id="main_container">
+
+        <div class="form_container">
+
+            <div class="form">
+
+
+                <h1 class="sprite_insta_big_logo title"></h1>
+
+                <form action="/profile/{{user.id}}/" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <p class="login_user_name">
+                        <label for="user_name">사용자명:</label>
+                        <input type="text" id="user_name" name="user_id">
+                    </p>
+
+                    <p class="login_user_password">
+                        <label for="user_password">비밀번호:</label>
+                        <input type="text" id="user_password" name="user_pw">
+                    </p>
+
+                    <p class="login_user_img">
+                        <label for="user_img">프로필 이미지:</label>
+                        <input type="file" id="user_img" name="user_img">
+                    </p>
+
+                    <input type="submit" id="submit_btn" value="프로필 수정" class="submit_btn">
+                </form>
+
+
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+</section>
+
+
+<script src={% static 'js/insta.js' %}></script>
+</body>
+</html>

@@ -1,0 +1,219 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>Instagram</title>
+
+    <link rel="stylesheet" href={% static 'css/reset.css' %}>
+    <link rel="stylesheet" href={% static 'css/common.css' %}>
+    <link rel="stylesheet" href={% static 'css/style.css' %}>
+
+    <style>
+
+        label.more_icon{
+            display: inline-block;
+            width: 15px;
+            height: 3px;
+            cursor: pointer;
+            position: relative;
+        }
+        input#more{
+            display:none;
+        }
+        nav#main_nav{
+            display:none;
+        }
+        input#more:checked + nav#main_nav{
+            display: block;
+        }
+
+        img#heart{
+            display: inline-block;
+            width: 24px;
+            height: 22px;
+        }
+
+    </style>
+
+</head>
+<body>
+
+<section id="container">
+
+
+    <header id="header">
+        <section class="inner">
+
+            <h1 class="logo">
+                <a href="/">
+                    <div class="sprite_insta_icon"></div>
+                    <div class="sprite_write_logo"></div>
+                </a>
+            </h1>
+            <div class="right_icons">
+                <a href="/chatroom/"><img src={% static 'imgs/message.png' %} style="width:25px; height:25px;"/></a>
+                <a href="/new_post/"><div class="sprite_camera_icon"></div></a>
+                <a href="/login/"><div class="sprite_compass_icon"></div></a>
+                <a href="/profile/"><div class="sprite_user_icon_outline"></div></a>
+            </div>
+        </section>
+
+    </header>
+
+    <section id="main_container">
+        <div class="inner">
+            <div class="contents_box">
+
+                {% for info in info %}
+                {% for user in user %}
+                {% if user.uname == info.writer %}
+
+                <article class="contents" style="margin: auto;">
+                    <header class="top">
+                        <div class="user_container">
+
+                            <div class="profile_img">
+                                <img src={{user.uimg.url}} alt="프로필이미지">
+                            </div>
+                            <div class="user_name">
+                                <div class="nick_name m_text">{{info.writer}}</div>
+                                <div class="country s_text">Seoul, South Korea</div>
+                            </div>
+
+
+                        </div>
+
+                        <div >
+                            {% if info.writer != request.session.user_id %}
+                            <button type="button" onClick="location.href='/follow/{{info.writer}}/'">follow</button>
+                            {% endif %}
+                            <button type="button" onClick="location.href='/edit_post/{{info.id}}/{{info.writer}}/'">edit</button>
+                            <button type="button" onClick="location.href='/del_post/{{info.id}}/{{info.writer}}/'">delete</button>
+
+                        </div>
+
+
+                    </header>
+
+                    <div class="img_section">
+                        <div class="trans_inner">
+                            <div><img src={{info.bimg.url}} alt="visual01"></div>
+                        </div>
+                    </div>
+
+                    <div class="bottom_icons">
+                        <div class="left_icons">
+                            <div class="heart_btn">
+                                <!--div class="sprite_heart_icon_outline" name="39" data-name="heartbeat" onclick="likeAjax({{info.id}}, this)"></div-->
+                                <p onclick="likeAjax({{info.id}}, this)">
+                                    <img src={% static 'imgs/heart.png' %} id="heart"/>
+                                </p>
+                            </div>
+                        </div>
+                        <!--div class="right_icon">
+                            <div class="sprite_bookmark_outline" data-name="bookmark"></div>
+                        </div-->
+                    </div>
+
+
+                    <div class="comment_container">
+                        <div class="comment" id="comment-list-ajax-post37">
+                            <div class="comment-detail">
+                                <div class="nick_name m_text">{{info.writer}}</div>
+                                <div>{{info.contents}}</div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!--div class="comment_field" id="add-comment-post37"-->
+
+                        <!--form action="/create_comment/{{info.id}}" method="POST">
+                        <ul class="comment_ul"></ul> <!--비어있는 ul태그-->
+                        <!--form onsubmit="return false">
+                        {% csrf_token %}
+                        <input class="comment_input" type="text" placeholder="댓글달기...">
+                        <button class="upload_btn m_text" data-name="comment" type="submit">게시</button>
+
+                        </form>
+
+                    </div-->
+                </article>
+                <br><br><br>
+
+
+                <script>
+                    function createComment() {
+                        const parent = document.querySelector(".comment_ul")
+                        const user = {{ request.session.id }};
+                        const comment = document.createElement("li")
+                        comment.innerHTML = `
+                        <div class="createcomment">
+                            <div>
+                                <b>${user}</b>
+                                <span>${}</span>
+                            </div>
+                                <button class=""></button>
+                            </div>
+                        `
+                        parent.appendChild(comment);
+                    }
+
+                </script>
+
+
+
+                {% endif %}
+                {% endfor %}
+                {% endfor %}
+
+
+                <script>
+                    function likeAjax(id,event) {
+                        var httpRequest = new XMLHttpRequest();
+                        httpRequest.onreadystatechange = function() {
+                            if (httpRequest.readyState == XMLHttpRequest.DONE
+                                && httpRequest.status == 200) {
+                                var json = JSON.parse(httpRequest.responseText);
+                                if (json['message']=='add like') {
+                                    event.innerHTML = `
+                                    <img src={% static 'imgs/heart2.png' %} id="heart" style="width: 24px; height:22px"/>
+                                    `
+                                }
+                                else if (json['message']=='del like') {
+                                    event.innerHTML = `
+                                    <img src={% static 'imgs/heart.png' %} id="heart" style="width: 24px; height:22px"/>
+                                    `
+                                }
+                            }
+                        };
+                        httpRequest.open("GET","/like/"+id,true);
+                        httpRequest.send();
+                    }
+                </script>
+
+
+
+            </div>
+        </div>
+    </section>
+
+
+
+</section>
+
+
+
+
+
+
+
+
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src={% static 'js/main.js' %}></script>
+</body>
+</html>

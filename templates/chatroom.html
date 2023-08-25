@@ -1,0 +1,117 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>Chat Room</title>
+
+    <link rel="stylesheet" href={% static 'css/reset.css' %}>
+    <link rel="stylesheet" href={% static 'css/common.css' %}>
+    <link rel="stylesheet" href={% static 'css/style.css' %}>
+
+
+</head>
+<body>
+
+
+<section id="container">
+
+
+
+    <header id="header">
+        <section class="h_inner">
+
+            <h1 class="logo">
+                <a href="/">
+                    <div class="sprite_insta_icon"></div>
+                    <div>
+                        <div class="sprite_write_logo"></div>
+                    </div>
+                </a>
+            </h1>
+
+            <div class="right_icons">
+                <a href="/chatroom/"><img src={% static 'imgs/message.png' %} style="width:25px; height:25px;"/></a>
+                <a href="/new_post/"><div class="sprite_camera_icon"></div></a>
+                <a href="/login/"><div class="sprite_compass_icon"></div></a>
+                <a href="/profile/"><div class="sprite_user_icon_outline"></div></a>
+            </div>
+        </section>
+    </header>
+
+
+
+    <div id="main_container">
+
+        <div class="form_container">
+
+            <div class="side_box">
+                <div class="user_profile">
+
+                    {% for me in friends %}
+                    {% if me.uname == request.session.user_id %}
+
+                    <div class="profile_thumb">
+                        <img src={{me.uimg.url}} alt="프로필사진">
+                    </div>
+
+                    {% endif %}
+                    {% endfor %}
+
+                    <div class="detail">
+                        <div class="id m_text">{{ request.session.user_id }}</div>
+                        <div class="ko_name">나</div>
+                    </div>
+                </div>
+
+                <article class="story">
+
+                    <div class="scroll_inner">
+
+                        {% if to %}
+                            {% for t in to %}
+                                {% if request.session.user_id == t.from_user %}
+                                    {% for room in room_num %}
+                                        {% if room.from_user == t.from_user %}
+                                            {% if room.to_user == t.to_user %}
+                                                {% for f in friends %}
+                                                    {% if f.uname == t.to_user %}
+
+                        <div class="thumb_user" style="cursor: pointer;" onclick="location.href='/chatroom/{{room.room_number}}/{{f.id}}/'">
+
+                            <div class="profile_thumb">
+                                <img src={{f.uimg.url}} alt="프로필사진">
+                            </div>
+                            <div class="detail">
+                                <div class="id">{{t.to_user}}</div>
+
+                            </div>
+
+                        </div>
+
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+
+                    </div>
+                </article>
+            </div>
+        </div>
+
+    </div>
+
+
+</section>
+
+
+<script src={% static 'js/insta.js' %}></script>
+</body>
+</html>
