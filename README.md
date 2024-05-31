@@ -7,8 +7,8 @@
 
 ## 🎥 시연 영상
 <div align="center">
-  
-[![Video Label](http://img.youtube.com/vi/mNfSSHZ9kFQ/0.jpg)](https://youtube.com/mNfSSHZ9kFQ?t=0s)
+
+  [![Video Label](http://img.youtube.com/vi/mNfSSHZ9kFQ/0.jpg)](https://youtu.be/mNfSSHZ9kFQ)
 
 </div>
 
