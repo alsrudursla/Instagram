@@ -6,7 +6,11 @@
 <br>
 
 ## 🎥 시연 영상
-<iframe width="750" height="480" src="https://www.youtube.com/embed/mNfSSHZ9kFQ" title="Instagram Clone Coding" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<div align="center">
+  
+[![Video Label](http://img.youtube.com/vi/mNfSSHZ9kFQ/0.jpg)](https://youtube.com/mNfSSHZ9kFQ)
+
+</div>
 
 <br>
 
